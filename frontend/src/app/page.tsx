@@ -32,15 +32,15 @@ export default function LandingPage() {
 						<StatsSection />
 					</section>
 					
-					<section id="features" className="py-12 md:py-16 bg-muted/40">
+					<section id="features" className=" ">
 						<FeaturesSection />
 					</section>
 					
-					<section id="dashboard-preview" className="py-12 md:py-16">
+					<section id="dashboard-preview" className="">
 						<DashboardPreviewSection />
 					</section>
 					
-					<section id="how-it-works" className="py-12 md:py-16 bg-muted/40">
+					<section id="how-it-works" className="">
 						<HowItWorksSection />
 					</section>
 					
@@ -48,7 +48,7 @@ export default function LandingPage() {
 						<PricingSection />
 					</section>
 					
-					<section id="benefits" className="py-12 md:py-16 bg-muted/40">
+					<section id="benefits" className="">
 						<BenefitsSection />
 					</section>
 					
@@ -56,15 +56,15 @@ export default function LandingPage() {
 						<TestimonialsSection />
 					</section>
 					
-					<section id="faq" className="py-12 md:py-16 bg-muted/40">
+					<section id="faq" className="">
 						<FAQSection />
 					</section>
 					
-					<section id="newsletter" className="py-12 md:py-16">
+					<section id="newsletter" className="">
 						<NewsletterSection />
 					</section>
 					
-					<section id="cta" className="py-12 md:py-24 bg-primary/5">
+					<section id="cta" className="">
 						<CTASection />
 					</section>
 				</Suspense>

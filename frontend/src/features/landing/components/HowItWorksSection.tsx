@@ -37,7 +37,7 @@ const Step = ({ step, title, description, icon: Icon, imageUrl, activeStep, setA
       id={`step-${step}`}
       className={cn(
         "flex flex-col lg:flex-row gap-8 lg:gap-16 py-16 items-center transition-opacity",
-        isActive ? "opacity-100" : "opacity-50"
+        isActive ? "opacity-100" : "opacity-80"
       )}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: isActive ? 1 : 0.5, y: 0 }}
@@ -153,7 +153,7 @@ export default function HowItWorksSection() {
       title: "Sign up in seconds",
       description: "Create your account with your college email to unlock personalized event recommendations and exclusive campus experiences.",
       icon: User,
-      imageUrl: "/images/universities/clear-space-thumbnails.png",
+      imageUrl: "/images/works/1-image.png",
       color: "bg-gradient-to-r from-violet-600 to-indigo-600"
     },
     {
@@ -161,7 +161,7 @@ export default function HowItWorksSection() {
       title: "Discover relevant events",
       description: "Browse events filtered by your interests, academic major, and schedule, with AI-powered recommendations tailored just for you.",
       icon: CalendarDays,
-      imageUrl: "/images/universities/Stanford-University-Logo.jpg",
+      imageUrl: "/images/works/2-image.png",
       color: "bg-gradient-to-r from-blue-600 to-cyan-600"
     },
     {
@@ -169,16 +169,8 @@ export default function HowItWorksSection() {
       title: "Register with one tap",
       description: "Secure your spot instantly with our one-click registration system and receive a digital QR ticket for seamless check-in.",
       icon: Ticket,
-      imageUrl: "/images/universities/Harvard_University_coat_of_arms.svg.png",
+      imageUrl: "/images/works/3-image.png",
       color: "bg-gradient-to-r from-fuchsia-600 to-pink-600"
-    },
-    {
-      step: 4,
-      title: "Earn digital certificates",
-      description: "Attend events and automatically receive verifiable digital credentials to showcase on your academic portfolio.",
-      icon: ScrollText,
-      imageUrl: "/images/universities/MIT-lockup-3line-red.png",
-      color: "bg-gradient-to-r from-emerald-600 to-teal-600"
     }
   ]
 
@@ -258,9 +250,6 @@ export default function HowItWorksSection() {
             />
           ))}
         </div>
-        
-        {/* Step Navigator */}
-        <Navigator steps={steps.length} activeStep={activeStep} setActiveStep={setActiveStep} />
         
         {/* CTA */}
         <motion.div 

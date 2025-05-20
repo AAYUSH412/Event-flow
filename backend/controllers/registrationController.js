@@ -19,9 +19,9 @@ export const registerForEvent = async (req, res) => {
       return res.status(400).json({ message: 'Cannot register for past events' });
     }
 
-    // Check if registration already exists
+    // Check if registration already exists and is active
     const existingRegistration = await Registration.findOne({ userId, eventId });
-    if (existingRegistration) {
+    if (existingRegistration && ['REGISTERED', 'WAITLISTED'].includes(existingRegistration.status)) {
       return res.status(400).json({ message: 'Already registered for this event' });
     }
 
@@ -33,14 +33,23 @@ export const registerForEvent = async (req, res) => {
       });
       
       if (registrationCount >= event.maxParticipants) {
-        // Create waitlist registration
-        const registration = new Registration({
-          userId,
-          eventId,
-          status: 'WAITLISTED'
-        });
+        // Create or update registration to waitlisted
+        let registration;
         
-        await registration.save();
+        if (existingRegistration) {
+          // Update existing cancelled registration to waitlisted
+          existingRegistration.status = 'WAITLISTED';
+          registration = await existingRegistration.save();
+        } else {
+          // Create new waitlisted registration
+          registration = new Registration({
+            userId,
+            eventId,
+            status: 'WAITLISTED'
+          });
+          await registration.save();
+        }
+        
         return res.status(200).json({ 
           registration, 
           message: 'Event is full. You have been added to the waitlist.' 
@@ -48,12 +57,21 @@ export const registerForEvent = async (req, res) => {
       }
     }
 
-    // Create registration
-    const registration = new Registration({
-      userId,
-      eventId,
-      status: 'REGISTERED'
-    });
+    // Create or update registration
+    let registration;
+    
+    if (existingRegistration) {
+      // Update existing cancelled registration to registered
+      existingRegistration.status = 'REGISTERED';
+      registration = await existingRegistration.save();
+    } else {
+      // Create new registration
+      registration = new Registration({
+        userId,
+        eventId,
+        status: 'REGISTERED'
+      });
+    }
 
     await registration.save();
     

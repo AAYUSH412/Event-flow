@@ -1,6 +1,4 @@
 import { cn } from "@/lib/utils"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 
 export interface LogoProps {
@@ -16,8 +14,6 @@ export function Logo({
   hideTextOnMobile = false,
   size = "md"
 }: LogoProps) {
-  const pathname = usePathname()
-  const isActive = pathname === href
   
   // Determine sizes based on the size prop
   const sizeClasses = {
@@ -79,12 +75,15 @@ export function Logo({
     </div>
   )
   
-  // If URL is provided, wrap in Link
-  return href ? (
-    <Link href={href} className="no-underline hover:no-underline">
-      {logoElement}
-    </Link>
-  ) : (
-    logoElement
-  )
+  // If URL is provided and we're not already in a link context, wrap in Link
+  if (href) {
+    // Instead of using Link, create a direct 'a' tag to avoid potential nested Links
+    return (
+      <a href={href} className="no-underline hover:no-underline">
+        {logoElement}
+      </a>
+    );
+  }
+  
+  return logoElement;
 }

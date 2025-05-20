@@ -49,7 +49,7 @@ const RegistrationCard = ({
           {isEventOver 
             ? "This event has already taken place." 
             : userRegistration?.status === "REGISTERED"
-            ? "You are registered for this event."
+            ? "You are already registered for this event."
             : userRegistration?.status === "WAITLISTED"
             ? "You are currently on the waitlist."
             : "Register to attend this event."}
@@ -65,11 +65,11 @@ const RegistrationCard = ({
         <>
           {userRegistration?.status === "REGISTERED" ? (
             <>
-              <div className="bg-green-50 border border-green-100 p-4 rounded-lg flex items-center mb-4">
+              <div className="bg-green-50 border border-green-100 p-4 rounded-lg flex items-center mb-4 registration-status">
                 <CheckCircle className="h-6 w-6 text-green-500 mr-3 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-green-800">You're all set!</p>
-                  <p className="text-sm text-green-700">You are registered for this event.</p>
+                  <p className="font-medium text-green-800">You&apos;re all set!</p>
+                  <p className="text-sm text-green-700">You are successfully registered for this event.</p>
                 </div>
               </div>
               <button
@@ -94,9 +94,9 @@ const RegistrationCard = ({
               <div className="bg-amber-50 border border-amber-100 p-4 rounded-lg flex items-center mb-4">
                 <AlertCircle className="h-6 w-6 text-amber-500 mr-3 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-amber-800">You're on the waitlist</p>
+                  <p className="font-medium text-amber-800">You&apos;re on the waitlist</p>
                   <p className="text-sm text-amber-700">
-                    You'll be automatically registered if a spot becomes available.
+                    You&apos;ll be automatically registered if a spot becomes available.
                   </p>
                 </div>
               </div>
@@ -117,23 +117,60 @@ const RegistrationCard = ({
                 }
               </button>
             </>
+          ) : userRegistration?.status === "CANCELLED" ? (
+            <>
+              <div className="bg-gray-50 border border-gray-100 p-4 rounded-lg flex items-center mb-4">
+                <AlertCircle className="h-6 w-6 text-gray-500 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="font-medium text-gray-800">Registration cancelled</p>
+                  <p className="text-sm text-gray-700">
+                    You cancelled your registration for this event.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleRegister}
+                disabled={isRegistering}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition flex items-center justify-center"
+              >
+                {isRegistering ? 
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Registering...
+                  </span> : 
+                  "Register Again"
+                }
+              </button>
+            </>
           ) : (
-            <button
-              onClick={handleRegister}
-              disabled={isRegistering}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition flex items-center justify-center"
-            >
-              {isRegistering ? 
-                <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Registering...
-                </span> : 
-                "Register Now"
-              }
-            </button>
+            <div>
+              <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-lg flex items-center mb-4">
+                <CheckCircle className="h-6 w-6 text-indigo-500 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="font-medium text-indigo-800">Ready to join?</p>
+                  <p className="text-sm text-indigo-700">Click below to register for this event.</p>
+                </div>
+              </div>
+              <button
+                onClick={handleRegister}
+                disabled={isRegistering}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition flex items-center justify-center"
+              >
+                {isRegistering ? 
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Registering...
+                  </span> : 
+                  "Register Now"
+                }
+              </button>
+            </div>
           )}
         </>
       )}

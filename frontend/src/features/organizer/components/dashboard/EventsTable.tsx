@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle,Calendar } from "lucide-react";
 
 interface Event {
   _id: string;

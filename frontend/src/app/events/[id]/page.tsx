@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/AuthContext";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
 
 // Import all event-related components
 import { EventLayout } from "@/features/events/components/EventLayout";
@@ -111,10 +111,23 @@ export default function EventDetailPage() {
       return;
     }
 
+    // Check if user is already registered
+    if (userRegistration?.status === "REGISTERED") {
+      // Show a subtle indication that user is already registered instead of an error
+      const alreadyRegisteredElement = document.querySelector(".registration-status");
+      if (alreadyRegisteredElement) {
+        alreadyRegisteredElement.classList.add("animate-pulse");
+        setTimeout(() => {
+          alreadyRegisteredElement.classList.remove("animate-pulse");
+        }, 1500);
+      }
+      return; // Do nothing if already registered
+    }
+
     setIsRegistering(true);
     try {
       await registrationService.registerForEvent({ eventId: id as string });
-      toast.success("Registration successful!");
+      // Successfully registered, don't show toast notification
       
       // Refresh event data to get updated registration status
       const response = await eventService.getEventById(id as string);
@@ -138,7 +151,7 @@ export default function EventDetailPage() {
       // Refresh event data
       const response = await eventService.getEventById(id as string);
       setEvent(response.event);
-      setUserRegistration(null);
+      setUserRegistration(response.event.userRegistration);
     } catch (error: unknown) {
       console.error("Cancellation error:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to cancel registration. Please try again.";
@@ -219,7 +232,7 @@ export default function EventDetailPage() {
             >
               {/* Organizer & Date */}
               <EventOrganizerInfo 
-                organizerName={typeof event.organizerId === 'object' ? event.organizerId.name : "Event Organizer"}
+                organizerName={typeof event.organizerId === 'object' && event.organizerId !== null && event.organizerId.name ? event.organizerId.name : "Event Organizer"}
                 startDateTime={event.startDateTime}
                 endDateTime={event.endDateTime}
                 formatDate={formatDate}
@@ -249,7 +262,7 @@ export default function EventDetailPage() {
                 isEventOver={isEventOver()}
                 isRegistering={isRegistering}
                 userRegistration={userRegistration}
-                organizerEmail={typeof event.organizerId === 'object' ? event.organizerId.email : undefined}
+                organizerEmail={typeof event.organizerId === 'object' && event.organizerId !== null ? event.organizerId.email : undefined}
                 handleRegister={handleRegister}
                 handleCancelRegistration={handleCancelRegistration}
               />

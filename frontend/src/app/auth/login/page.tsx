@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { Mail, Lock, LogIn, ArrowRight } from "lucide-react";
+import { Mail, Lock, LogIn, ArrowRight, AlertCircle } from "lucide-react";
 import { useAuth } from "@/features/auth/AuthContext";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Handle hydration mismatch
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
+    setErrorMessage(null); // Reset error message on new submit
     try {
       // Use the login function from auth context
       const loggedInUser = await login(data.email, data.password);
@@ -63,10 +65,31 @@ export default function LoginPage() {
       }
     } catch (error: unknown) {
       console.error("Login error:", error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "Login failed. Please check your credentials.";
-      toast.error(errorMessage);
+      // Handle API error response with more detail
+      interface ApiError {
+        response?: {
+          data?: {
+            message?: string;
+            error?: string;
+          };
+          status?: number;
+        };
+        message?: string;
+      }
+      
+      const err = error as ApiError;
+      let displayErrorMessage = "Login failed. Please check your credentials.";
+      
+      if (err.response?.data?.message) {
+        displayErrorMessage = err.response.data.message;
+      } else if (err.response?.data?.error) {
+        displayErrorMessage = err.response.data.error;
+      } else if (err.message) {
+        displayErrorMessage = err.message;
+      }
+      
+      setErrorMessage(displayErrorMessage);
+      toast.error(displayErrorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +125,16 @@ export default function LoginPage() {
               Enter your credentials to access your account
             </p>
           </motion.div>
+          
+          {/* Error Message Alert */}
+          {errorMessage && (
+            <div className="mb-4 rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-300">
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 mr-2" />
+                <p className="text-sm">{errorMessage}</p>
+              </div>
+            </div>
+          )}
           
           {/* Form */}
           <motion.form 
